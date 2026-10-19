@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meadow House Repairs</title>
+<style>
+:root{color-scheme:light dark;--bg:#eef1f7;--card:#fff;--soft:#f3f5fb;--ink:#111a33;--muted:#46506e;--line:#9aa6c8;--navy:#14204a;--brand:#2f3fb5;--gold:#f5b301;--urgent:#c8003f;--blue:#1f5eff;--amber:#ffb800;--mint:#12d18e;--done:#006b45;--note:#e9f0ff;--field:#fbfaff;--urgbg:#fff8fa}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1226;--card:#161d38;--soft:#1e2748;--ink:#eaeefc;--muted:#a9b4d6;--line:#4a5688;--brand:#8e9bff;--urgent:#ff6b93;--note:#1c2a55;--field:#10162d;--urgbg:#2a1426;--done:#3de0a8}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2{font-family:Georgia,"Iowan Old Style",serif}
+h1{margin:0;font-size:2.4rem;font-weight:700;line-height:1.1}h1 span{font-weight:400}
+h2{font-size:1.4rem;margin:0 0 12px}h3{font-size:1rem;margin:16px 0 6px}
+header{background:var(--navy);color:#fff;border-bottom:4px solid var(--gold);padding:24px 20px 20px;text-align:center}
+.brand{display:flex;flex-direction:column;align-items:center}
+.logo{width:72px;height:72px;margin-bottom:10px}
+header p{margin:6px 0 16px}
+.roles{display:inline-flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 10px}
+.role{margin:0;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.55)}
+.role:hover{background:rgba(255,255,255,.14)}
+.role[aria-pressed=true]{background:#fff;color:var(--navy);border-color:#fff}
+.role[aria-pressed=true]::before{content:"\2713  "}
+.who{margin:0 0 16px;color:#d9e1fb;font-size:.95rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;max-width:900px;margin:0 auto;text-align:left}
+.stat{margin:0;display:flex;flex-direction:column;align-items:flex-start;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.22);border-left:5px solid #fff;padding:8px 14px}
+.stat strong{font-size:1.8rem;line-height:1.1}.stat span{color:#d9e1fb;font-weight:500;font-size:.95rem}
+.stat[aria-pressed=true]{background:#fff;color:var(--navy)}.stat[aria-pressed=true] span{color:var(--navy)}
+.t-new{border-left-color:#6f9bff}.t-prog{border-left-color:#ffc83d}.t-done{border-left-color:#3de0a8}.t-urg{border-left-color:#ff5c8a}
+main{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:24px;padding:24px;max-width:1280px;margin:0 auto;align-items:start}
+main.single{grid-template-columns:minmax(0,1fr)}
+@media (max-width:800px){main{grid-template-columns:minmax(0,1fr);padding:14px}h1{font-size:1.8rem}}
+.panel{background:var(--card);border:2px solid var(--line);border-top:4px solid var(--brand);border-radius:10px;padding:18px}
+.panel[hidden]{display:none}
+label,legend{display:block;font-weight:700;margin:12px 0 4px}
+fieldset{border:0;padding:0;margin:0}
+.radio{display:inline-flex;align-items:center;gap:6px;margin:0 16px 0 0;font-weight:500}
+input[type=text],input[type=password],input[type=search],textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--field);border:2px solid var(--line);border-radius:8px;padding:9px 10px}
+textarea{min-height:84px;resize:vertical}
+input[type=radio],input[type=checkbox]{width:20px;height:20px;accent-color:var(--brand)}
+[aria-invalid=true]{border-color:var(--urgent);background:var(--urgbg)}
+button{font:inherit;font-weight:700;border-radius:8px;padding:9px 16px;border:2px solid var(--brand);background:var(--brand);color:#fff;cursor:pointer;margin:8px 8px 0 0}
+@media (prefers-color-scheme:dark){button{color:#0d1226}}
+button:hover{filter:brightness(1.12)}
+button.alt{background:transparent;color:var(--brand)}
+button.done{background:var(--done);border-color:var(--done);color:#fff}
+.role,.stat{color:#fff}
+:focus-visible{outline:3px solid #0b3dff;outline-offset:2px}
+header :focus-visible{outline-color:#ffd24d}
+@media (prefers-color-scheme:dark){:focus-visible{outline-color:#ffd24d}}
+.err{color:var(--urgent);font-weight:700;margin:4px 0 0}
+.err:empty,.ok:empty{display:none}
+.ok{background:#c9f7e4;color:#00402b;border-radius:8px;padding:8px 12px;margin:0 0 12px;font-weight:700}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.count{font-size:.85rem;color:var(--muted);text-align:right;margin:2px 0 0}
+.hint{color:var(--muted);font-size:.9rem;margin:4px 0 0}
+input[type=file]{width:100%;font:inherit;padding:8px;border:2px dashed var(--line);border-radius:8px;background:var(--field);color:var(--ink)}
+.prev{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px}.prev[hidden]{display:none}
+.prev img{max-width:140px;max-height:100px;border-radius:8px;border:2px solid var(--line)}
+.bar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.bar h2{margin:0}
+.tog{margin:0;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:700;cursor:pointer}
+.tools{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr);gap:10px;margin:12px 0}
+.tools label{margin:0 0 2px;font-size:.9rem}
+@media (max-width:600px){.tools,.two{grid-template-columns:minmax(0,1fr)}}
+.job{background:var(--card);border:2px solid var(--line);border-left:6px solid var(--blue);border-radius:10px;padding:16px;margin:0 0 18px}
+.job.st-InProgress{border-left-color:var(--amber)}.job.st-Completed{border-left-color:var(--mint)}
+.job.urgent{border-left-color:var(--urgent);background:var(--urgbg)}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}
+.id{font-weight:800;font-size:1.2rem;margin-right:4px}
+.badge{display:inline-block;padding:2px 12px;border-radius:6px;font-weight:700;font-size:.95rem}
+.s-New{background:var(--blue);color:#fff}.s-InProgress{background:var(--amber);color:#3a2600}.s-Completed{background:var(--mint);color:#00301f}
+.p-Urgent{background:var(--urgent);color:#fff}.p-Normal{background:var(--soft);color:var(--ink)}
+@media (prefers-color-scheme:dark){.p-Urgent{color:#2a0010}}
+.desc{font-size:1.15rem;font-weight:700;margin:6px 0 10px;overflow-wrap:anywhere;white-space:pre-wrap}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin:0 0 8px}
+.facts div{background:var(--soft);border-radius:8px;padding:6px 10px;min-width:0}
+.facts dt{font-size:.9rem;color:var(--muted);font-weight:600}.facts dd{margin:0;font-weight:700;overflow-wrap:anywhere}
+.latest{background:var(--note);border-left:4px solid var(--blue);border-radius:6px;padding:8px 10px;margin:8px 0;overflow-wrap:anywhere;white-space:pre-wrap}
+.photo{display:block;max-width:100%;max-height:260px;border-radius:10px;border:2px solid var(--line);margin:0 0 10px}
+ol.hist{list-style:none;margin:0;padding:0;border-left:3px solid var(--brand)}
+ol.hist li{padding:4px 0 8px 12px;overflow-wrap:anywhere}
+ol.hist time{display:block;color:var(--muted);font-size:.9rem;font-weight:600}
+ol.hist .t{white-space:pre-wrap}
+.upd{border-top:2px dashed var(--line);margin-top:12px;padding-top:4px}
+.lock{background:var(--soft);border-radius:8px;padding:8px 12px;margin-top:12px;font-weight:600}
+.empty{color:var(--muted);font-weight:600}
+dialog{border:2px solid var(--line);border-top:6px solid var(--gold);border-radius:12px;padding:22px;width:min(92vw,400px);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(10,16,40,.65)}
+dialog h2{margin-bottom:4px}
+.pw{display:flex;gap:8px;align-items:stretch}.pw button{margin:0;white-space:nowrap}
+.actions{display:flex;flex-wrap:wrap;margin-top:6px}
+@media (prefers-reduced-motion:no-preference){.job{transition:box-shadow .15s}.job:hover{box-shadow:0 4px 14px rgba(20,32,74,.18)}}
+@media print{header .roles,.tools,.upd,.lock,#report-panel,.tog{display:none}}
+.s-Cancelled{background:var(--soft);color:var(--muted)}
+.job.st-Cancelled{border-left-color:var(--line);background:var(--card);opacity:.85}
+.badge.late{background:var(--urgent);color:#fff}
+@media (prefers-color-scheme:dark){.badge.late{color:#2a0010}}
+.tools2{display:flex;flex-wrap:wrap;margin:0 0 4px}
+.tools2 button{margin:4px 8px 0 0;padding:6px 12px;font-size:.9rem}
+.upd .actions button,.upd>div>button{margin-top:8px}
+
+/* ---- refresh ---- */
+h1,h2{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;letter-spacing:-.01em}
+header{position:relative;overflow:hidden;background:linear-gradient(165deg,#111b42 0%,#1b2b68 62%,#26408f 100%);padding:34px 20px 30px}
+header>*:not(.hills){position:relative;z-index:1}
+.hills{position:absolute;left:0;right:0;bottom:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.logo{width:92px;height:92px;margin-bottom:14px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35))}
+h1{font-size:2.8rem}
+header p{max-width:46ch;margin-left:auto;margin-right:auto}
+.stat{border-radius:12px;transition:transform .12s,background .12s}
+.stat:hover{transform:translateY(-2px);background:rgba(255,255,255,.16)}
+.stat[aria-pressed=true]:hover{background:#fff}
+.panel{border-radius:16px;box-shadow:0 10px 28px rgba(20,32,74,.10)}
+.job{border-radius:14px;box-shadow:0 2px 8px rgba(20,32,74,.06)}
+button{border-radius:10px}
+.ico{flex:none;width:36px;height:36px;border-radius:50%;background:var(--note);color:var(--brand);display:inline-grid;place-items:center}
+.ico svg{width:20px;height:20px}
+.cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;margin:0;padding:12px 6px;border:2px solid var(--line);border-radius:12px;background:var(--field);font-weight:600;font-size:.85rem;line-height:1.2;text-align:center;cursor:pointer}
+.tile input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.tile .ico{width:44px;height:44px}.tile .ico svg{width:24px;height:24px}
+.tile:hover{border-color:var(--brand)}
+.tile:has(input:checked){border-color:var(--brand);background:var(--note);box-shadow:inset 0 0 0 1px var(--brand)}
+.tile:has(input:checked) .ico{background:var(--brand);color:#fff}
+.tile:has(input:focus-visible){outline:3px solid #0b3dff;outline-offset:2px}
+.empty-box{text-align:center;padding:28px 16px;background:var(--card);border:2px dashed var(--line);border-radius:14px}
+.empty-box svg{width:150px;max-width:60%;height:auto}
+.empty-box .empty{margin:8px auto 0;max-width:42ch}
+footer{display:flex;align-items:center;justify-content:center;gap:10px;padding:22px 16px 32px;color:var(--muted);font-size:.9rem}
+footer p{margin:0}
+@media (prefers-color-scheme:dark){.tile:has(input:focus-visible){outline-color:#ffd24d}.tile:has(input:checked) .ico{color:#0d1226}button.done{color:#00301f}}
+@media (max-width:800px){h1{font-size:2.1rem}.logo{width:76px;height:76px}}
+@media (max-width:380px){.cats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media print{footer,.hills{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <svg class="hills" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false"><path d="M0 90C160 40 330 40 500 80s330 40 500-10c80-24 150-20 200-6v76H0z" fill="#fff" opacity=".07"/><path d="M0 112C210 70 400 82 600 108s420 4 600-34v66H0z" fill="#3de0a8" opacity=".13"/><g fill="#fff" opacity=".12"><path d="M90 96 118 74l28 22v22H90z"/><path d="M1010 92l24-19 24 19v24h-48z"/><path d="M1080 104l18-14 18 14v14h-36z"/></g><g fill="#ffc83d" opacity=".5"><rect x="110" y="98" width="8" height="12" rx="1"/><rect x="1028" y="98" width="8" height="12" rx="1"/></g></svg>
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd24d"/><stop offset="1" stop-color="#f5a300"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#lg)"/><path d="M32 12 10 31h7v20h30V31h7z" fill="#14204a"/><path d="M24 43l13-13" stroke="#ffc83d" stroke-width="4.5" stroke-linecap="round"/><circle cx="40" cy="27" r="6" fill="#ffc83d"/><circle cx="43" cy="24" r="2.6" fill="#14204a"/><path d="M44 11c7-.5 10.500 3 10.500 9.500-7 .5-10.500-3-10.500-9.500z" fill="#12d18e"/><path d="M46 18.500c2-2.500 4.500-4 6.500-5" stroke="#14204a" stroke-width="1.400" stroke-linecap="round" fill="none"/></svg>
+    <h1>Meadow House <span>Repairs</span></h1>
+    <p>Report a repair, follow its progress and see what was done.</p>
+  </div>
+  <div class="roles" role="group" aria-label="Choose how to use this site">
+    <button type="button" id="role-staff" class="role" aria-pressed="true">Staff</button>
+    <button type="button" id="role-repair" class="role" aria-pressed="false">Repair person sign in</button>
+    <button type="button" id="signout" class="role" hidden>Sign out</button>
+  </div>
+  <p id="who" class="who" role="status"></p>
+  <div id="stats" class="stats" role="group" aria-label="Filter jobs by summary"></div>
+</header>
+
+<dialog id="login" aria-labelledby="login-h">
+  <form id="login-form" novalidate>
+    <h2 id="login-h">Repair person sign in</h2>
+    <p class="hint">Only the repair team can update or complete jobs.</p>
+    <label for="lu">Username</label>
+    <input id="lu" type="text" autocomplete="username" autocapitalize="none" spellcheck="false">
+    <label for="lp">Password</label>
+    <div class="pw">
+      <input id="lp" type="password" autocomplete="current-password" aria-describedby="login-err">
+      <button type="button" class="alt" id="showpw" aria-pressed="false">Show</button>
+    </div>
+    <p id="login-err" class="err" role="alert"></p>
+    <div class="actions">
+      <button type="submit" id="login-go">Sign in</button>
+      <button type="button" class="alt" id="login-cancel">Cancel</button>
+    </div>
+  </form>
+</dialog>
+
+<main>
+  <section class="panel" id="report-panel" aria-labelledby="form-h">
+    <h2 id="form-h">Report a repair</h2>
+    <p id="created" class="ok" role="status" tabindex="-1"></p>
+    <form id="report" novalidate>
+      <label for="desc">Description of the repair</label>
+      <textarea id="desc" maxlength="600" aria-describedby="desc-err"></textarea>
+      <p id="desc-count" class="count" aria-hidden="true">0 / 600</p>
+      <p id="desc-err" class="err" role="alert"></p>
+      <fieldset><legend>Type of repair</legend><div id="cats" class="cats"></div></fieldset>
+      <label for="room">Room (optional)</label><input id="room" type="text" autocomplete="off" maxlength="40"></div>
+      <label for="rep">Reporter name</label>
+      <input id="rep" type="text" autocomplete="off" aria-describedby="rep-err">
+      <p id="rep-err" class="err" role="alert"></p>
+      <label for="photo">Photo of the problem (optional)</label>
+      <input id="photo" type="file" accept="image/*" aria-describedby="photo-hint photo-err">
+      <p id="photo-hint" class="hint">JPG or PNG. The photo is shrunk and saved in this browser only.</p>
+      <p id="photo-err" class="err" role="alert"></p>
+      <div id="photo-prev" class="prev" hidden>
+        <img id="photo-img" alt="Preview of the attached photo">
+        <button type="button" class="alt" id="photo-rm">Remove photo</button>
+      </div>
+      <fieldset>
+        <legend>Priority</legend>
+        <label class="radio"><input type="radio" name="prio" value="Normal" checked> Normal</label>
+        <label class="radio"><input type="radio" name="prio" value="Urgent"> Urgent</label>
+      </fieldset>
+      <button type="submit">Report repair</button>
+    </form>
+  </section>
+  <section aria-labelledby="jobs-h">
+    <div class="bar">
+      <h2 id="jobs-h">Repair jobs</h2>
+      <label class="radio tog"><input type="checkbox" id="hide"> Hide completed and cancelled jobs</label>
+    </div>
+    <div class="tools" role="search">
+      <div><label for="q">Search jobs</label><input id="q" type="search" placeholder="Word, name, room or job number"></div>
+      <div><label for="sf">Show</label>
+        <select id="sf"><option value="">All jobs</option><option>New</option><option>In Progress</option><option>Completed</option><option>Cancelled</option><option value="Urgent">Urgent and open</option></select></div>
+      <div><label for="so">Sort by</label>
+        <select id="so"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="urg">Urgent first</option></select></div>
+    </div>
+    <p id="hidden-note" class="hint" role="status"></p>
+    <div class="tools2">
+      <button type="button" class="alt" id="exp-csv">Export CSV</button>
+      <button type="button" class="alt" id="exp-json">Back up (JSON)</button>
+      <button type="button" class="alt" id="imp">Restore backup</button>
+      <input type="file" id="imp-file" accept="application/json,.json" hidden aria-label="Choose a backup file">
+    </div>
+    <p id="bk-msg" class="hint" role="status"></p>
+    <div id="jobs"></div>
+  </section>
+</main>
+
+<footer>
+  <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="18" fill="#f5b301"/><path d="M32 12 10 31h7v20h30V31h7z" fill="#14204a"/></svg>
+  <p>Meadow House Repairs keeps jobs in this browser only. Use Back up to save a copy.</p>
+</footer>
+
+<script>
+(function () {
+  var KEY = 'meadowHouseJobs', HOUSE = 'Meadow House';
+  /* Sign-in check. Only a salted, repeatedly hashed fingerprint is stored, not the password itself. */
+  var AUTH = { salt: 'mh7Kq2xV9', hash: '92111600db260451b11cdb8ff8e8348bd5ea3cd44b743119188b68e84173d04e', rounds: 5000 };
+  var jobs = load();
+
+  function load() { try { var j = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(j) ? j : []; } catch (e) { return []; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(jobs)); return true; } catch (e) { return false; } }
+  function nextId() {
+    var m = 0;
+    jobs.forEach(function (j) { var n = parseInt(String(j.id).replace('MH-', ''), 10); if (n > m) m = n; });
+    return 'MH-' + String(m + 1).padStart(4, '0');
+  }
+  function fmt(iso) { return new Date(iso).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'medium' }); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+  function addEntry(job, type, text) { job.history.push({ at: new Date().toISOString(), type: type, text: text }); }
+  function slug(s) { return s.replace(/\s+/g, ''); }
+  function closed(j) { return j.status === 'Completed' || j.status === 'Cancelled'; }
+  function isLate(j) { return !closed(j) && Date.now() - new Date(j.createdAt) > (j.priority === 'Urgent' ? 24 : 168) * 36e5; } // urgent: 24 hours, normal: 7 days
+  function $(id) { return document.getElementById(id); }
+  function ss(k, v) { try { if (v === undefined) return sessionStorage.getItem(k); if (v === null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); } catch (e) {} return null; }
+
+  /* ---------- Icons and pictures ---------- */
+  var ICONS = {
+    'General': '<path d="M14.700 6.300a4 4 0 0 0-5.400 5.100L3.500 17.200a1.800 1.800 0 0 0 2.600 2.600l5.800-5.800a4 4 0 0 0 5.100-5.400l-2.500 2.500-2.200-.6-.6-2.200z"/>',
+    'Plumbing': '<path d="M12 3s6 6.200 6 10.500a6 6 0 0 1-12 0C6 9.200 12 3 12 3z"/><path d="M9.500 14a2.500 2.500 0 0 0 2 2.500"/>',
+    'Electrical': '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+    'Heating': '<path d="M12 3c1 3.500 5 5.500 5 10a5 5 0 0 1-10 0c0-2 1-3.500 2-4.500.2 1.500 1 2.300 2 2.500C11 8.500 11 5.500 12 3z"/>',
+    'Doors and windows': '<rect x="5" y="3" width="14" height="18" rx="1.500"/><circle cx="15.500" cy="12.500" r=".9" fill="currentColor"/>',
+    'Appliances': '<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M7 6.500h2"/>'
+  };
+  function svg(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + (ICONS[n] || ICONS.General) + '</svg>'; }
+  function iconEl(n) { var s = el('span', 'ico'); s.innerHTML = svg(n); return s; }
+  var EMPTY_SVG = '<svg viewBox="0 0 160 110" aria-hidden="true" focusable="false"><path d="M0 92c30-18 60-18 80-6s50 12 80-6v30H0z" fill="#12d18e" opacity=".25"/><path d="M40 90V52l40-32 40 32v38z" fill="var(--soft)" stroke="var(--brand)" stroke-width="3" stroke-linejoin="round"/><rect x="70" y="62" width="20" height="28" rx="3" fill="var(--brand)"/><path d="M96 56l12 12" stroke="#ffb800" stroke-width="5" stroke-linecap="round"/><circle cx="114" cy="50" r="8" fill="#ffb800"/></svg>';
+  function emptyBox(msg) { var d = el('div', 'empty-box'); d.innerHTML = EMPTY_SVG; d.appendChild(el('p', 'empty', msg)); return d; }
+  Object.keys(ICONS).forEach(function (n, i) {
+    var l = el('label', 'tile'), r = document.createElement('input'); r.type = 'radio'; r.name = 'cat'; r.value = n;
+    if (!i) { r.defaultChecked = true; r.checked = true; }
+    l.appendChild(r); l.appendChild(iconEl(n)); l.appendChild(el('span', null, n)); $('cats').appendChild(l);
+  });
+
+  /* ---------- SHA-256 (works on any page, including local files) ---------- */
+  function sha256(a) {
+    function rr(v, n) { return (v >>> n) | (v << (32 - n)); }
+    var mp = Math.pow, mw = mp(2, 32), i, j, out = '', w = [], bl = a.length * 8;
+    var h = sha256.h = sha256.h || [], k = sha256.k = sha256.k || [], pc = k.length, comp = {};
+    for (var c = 2; pc < 64; c++) if (!comp[c]) { for (i = 0; i < 313; i += c) comp[i] = c; h[pc] = (mp(c, .5) * mw) | 0; k[pc++] = (mp(c, 1 / 3) * mw) | 0; }
+    a += '\x80'; while (a.length % 64 - 56) a += '\x00';
+    for (i = 0; i < a.length; i++) w[i >> 2] |= a.charCodeAt(i) << ((3 - i) % 4) * 8;
+    w[w.length] = (bl / mw) | 0; w[w.length] = bl;
+    for (j = 0; j < w.length;) {
+      var x = w.slice(j, j += 16), old = h; h = h.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        var w15 = x[i - 15], w2 = x[i - 2], A = h[0], E = h[4];
+        var t1 = h[7] + (rr(E, 6) ^ rr(E, 11) ^ rr(E, 25)) + ((E & h[5]) ^ (~E & h[6])) + k[i] + (x[i] = i < 16 ? x[i] : (x[i - 16] + (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + x[i - 7] + (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);
+        var t2 = (rr(A, 2) ^ rr(A, 13) ^ rr(A, 22)) + ((A & h[1]) ^ (A & h[2]) ^ (h[1] & h[2]));
+        h = [(t1 + t2) | 0].concat(h); h[4] = (h[4] + t1) | 0;
+      }
+      for (i = 0; i < 8; i++) h[i] = (h[i] + old[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) for (j = 3; j + 1; j--) { var b = (h[i] >> (j * 8)) & 255; out += (b < 16 ? 0 : '') + b.toString(16); }
+    return out;
+  }
+  function fingerprint(user, pass) {
+    var u = function (s) { return unescape(encodeURIComponent(s)); };
+    var d = sha256(u(AUTH.salt + ':' + user.trim().toLowerCase() + ':' + pass));
+    for (var i = 0; i < AUTH.rounds; i++) d = sha256(d + AUTH.salt);
+    return d;
+  }
+
+  /* ---------- State ---------- */
+  var role = ss('meadowAuth') === '1' ? 'repair' : 'staff'; // repair access lasts for this tab only
+  var hideDone = false; try { hideDone = localStorage.getItem('meadowHideDone') === '1'; } catch (e) {}
+  var f = { q: '', st: '', so: 'new' };
+
+  /* ---------- Report form ---------- */
+  var form = $('report'), descEl = $('desc'), repEl = $('rep'), created = $('created');
+  function setErr(input, errEl, msg) { errEl.textContent = msg; if (msg) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid'); }
+  descEl.addEventListener('input', function () { $('desc-count').textContent = descEl.value.length + ' / 600'; });
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var d = descEl.value.trim(), r = repEl.value.trim();
+    setErr(descEl, $('desc-err'), d ? '' : 'Enter a description of the repair. It cannot be blank or only spaces.');
+    setErr(repEl, $('rep-err'), r ? '' : 'Enter the reporter name. It cannot be blank or only spaces.');
+    created.textContent = '';
+    if (!d || !r) { (d ? repEl : descEl).focus(); return; }
+    var prio = form.elements.prio.value === 'Urgent' ? 'Urgent' : 'Normal';
+    var job = { id: nextId(), house: HOUSE, description: d, reporter: r, category: form.elements.cat.value, room: $('room').value.trim(), priority: prio, status: 'New', createdAt: new Date().toISOString(), photo: photoData, history: [] };
+    addEntry(job, 'status', 'Job reported. Status: New. Priority: ' + prio + '. Type: ' + job.category + '.' + (photoData ? ' Photo attached.' : ''));
+    jobs.unshift(job);
+    var saved = save();
+    form.reset(); clearPhoto(); $('desc-count').textContent = '0 / 600';
+    created.textContent = 'Job ' + job.id + ' created as New with ' + prio + ' priority.' + (saved ? '' : ' Warning: this browser could not save it.');
+    render(); created.focus();
+  });
+
+  /* ---------- Job cards ---------- */
+  function latestNote(job) { for (var i = job.history.length - 1; i >= 0; i--) if (job.history[i].type === 'note') return job.history[i].text; return ''; }
+  function dur(ms) {
+    var m = Math.floor(ms / 60000); if (m < 1) return 'under a minute'; if (m < 60) return m + ' min';
+    var h = Math.floor(m / 60); if (h < 24) return h + ' hr ' + (m % 60) + ' min';
+    var d = Math.floor(h / 24); return d + ' day' + (d > 1 ? 's ' : ' ') + (h % 24) + ' hr';
+  }
+  function buildCard(job) {
+    var card = el('article', 'job st-' + slug(job.status) + (job.priority === 'Urgent' ? ' urgent' : ''));
+    card.id = 'job-' + job.id; card.setAttribute('aria-label', 'Repair job ' + job.id);
+    var top = el('div', 'top'); top.appendChild(iconEl(job.category));
+    top.appendChild(el('span', 'id', job.id));
+    top.appendChild(el('span', 'badge s-' + slug(job.status), 'Status: ' + job.status));
+    top.appendChild(el('span', 'badge p-' + job.priority, job.priority === 'Urgent' ? 'Urgent priority' : 'Normal priority'));
+    if (isLate(job)) top.appendChild(el('span', 'badge late', 'Overdue'));
+    card.appendChild(top);
+    var ok = el('p', 'ok'); ok.setAttribute('role', 'status'); ok.tabIndex = -1; card.appendChild(ok);
+    card.appendChild(el('p', 'desc', job.description));
+    if (typeof job.photo === 'string' && job.photo.indexOf('data:image/') === 0) {
+      var im = el('img', 'photo'); im.alt = 'Photo attached to job ' + job.id; im.src = job.photo; card.appendChild(im);
+    }
+    var last = job.history[job.history.length - 1].at, done = closed(job);
+    var rows = [['House', job.house], ['Reported by', job.reporter]];
+    if (job.category) rows.push(['Type of repair', job.category]);
+    if (job.room) rows.push(['Room', job.room]);
+    if (job.assignee) rows.push(['Assigned to', job.assignee]);
+    if (job.cost) rows.push(['Cost', '\u00a3' + job.cost]);
+    if (job.parts) rows.push(['Parts used', job.parts]);
+    rows.push(['Date reported', fmt(job.createdAt)], ['Last updated', fmt(last)], ['History entries', String(job.history.length)],
+      [done ? 'Time to complete' : 'Open for', dur(new Date(done ? last : Date.now()) - new Date(job.createdAt))]);
+    var dl = el('dl', 'facts');
+    rows.forEach(function (r) { var d = el('div'); d.appendChild(el('dt', null, r[0])); d.appendChild(el('dd', null, r[1])); dl.appendChild(d); });
+    card.appendChild(dl);
+    var ln = latestNote(job);
+    if (ln) { var l = el('div', 'latest'); l.appendChild(el('strong', null, 'Latest progress note: ')); l.appendChild(document.createTextNode(ln)); card.appendChild(l); }
+    if (job.status === 'Completed') { var c = el('div', 'latest'); c.appendChild(el('strong', null, 'Completion note: ')); c.appendChild(document.createTextNode(job.completionNote || '')); card.appendChild(c); }
+    card.appendChild(el('h3', null, 'History'));
+    var ol = el('ol', 'hist');
+    job.history.forEach(function (h) { var li = el('li'); li.appendChild(el('time', null, fmt(h.at))); li.appendChild(el('span', 't', h.text)); ol.appendChild(li); });
+    card.appendChild(ol);
+    if (!done) {
+      if (role === 'repair') card.appendChild(buildUpdate(job, card));
+      else {
+        var lock = el('div', 'lock', 'Only the repair team can update this job. ');
+        var sw = el('button', 'alt', 'Repair person sign in'); sw.type = 'button';
+        sw.addEventListener('click', openLogin);
+        lock.appendChild(sw);
+        if (job.status === 'New') {
+          var cb = el('button', 'alt', 'Cancel this job'); cb.type = 'button';
+          cb.addEventListener('click', function () {
+            if (!confirm('Cancel job ' + job.id + '? This cannot be undone.')) return;
+            job.status = 'Cancelled'; addEntry(job, 'status', 'Cancelled by staff.'); save(); render();
+          });
+          lock.appendChild(cb);
+        }
+        card.appendChild(lock);
+      }
+    }
+    return card;
+  }
+  function field(job, kind, label, buttons) {
+    var wrap = el('div'), id = kind + '-' + job.id;
+    var lab = el('label', null, label); lab.setAttribute('for', id);
+    var ta = el('textarea'); ta.id = id; ta.setAttribute('aria-describedby', id + '-err');
+    var err = el('p', 'err'); err.id = id + '-err'; err.setAttribute('role', 'alert');
+    wrap.appendChild(lab); wrap.appendChild(ta); wrap.appendChild(err);
+    buttons.forEach(function (b) { wrap.appendChild(b); });
+    return { wrap: wrap, ta: ta, err: err };
+  }
+  function buildUpdate(job, card) {
+    var box = el('div', 'upd');
+    var aw = el('div'), al = el('label', null, 'Assigned to'), ai = el('input'), ab = el('button', 'alt', 'Save assignment');
+    al.setAttribute('for', 'as-' + job.id); ai.type = 'text'; ai.id = 'as-' + job.id; ai.maxLength = 40; ai.value = job.assignee || ''; ab.type = 'button';
+    aw.appendChild(al); aw.appendChild(ai); aw.appendChild(ab); box.appendChild(aw);
+    function applyAssignee() {
+      var a = ai.value.trim();
+      if (a !== (job.assignee || '')) { job.assignee = a; addEntry(job, 'status', a ? 'Assigned to ' + a + '.' : 'Assignment cleared.'); }
+    }
+    ab.addEventListener('click', function () {
+      if (!allowed() || ai.value.trim() === (job.assignee || '')) return;
+      finish('Saved: assignment updated for ' + job.id + '.');
+    });
+    var saveBtn = el('button', null, 'Save progress note'); saveBtn.type = 'button';
+    var btns = [saveBtn], startBtn = null;
+    if (job.status === 'New') { startBtn = el('button', 'alt', 'Move to In Progress'); startBtn.type = 'button'; btns.unshift(startBtn); }
+    var p = field(job, 'progress', 'Progress note', btns); box.appendChild(p.wrap);
+    var doneBtn = el('button', 'done', 'Mark as Completed'); doneBtn.type = 'button';
+    var c = field(job, 'complete', 'Completion note (required to complete)', [doneBtn]); box.appendChild(c.wrap);
+    var cr = el('div', 'two');
+    function mini(id, lab) { var d = el('div'), l = el('label', null, lab), i = el('input'); i.type = 'text'; i.id = id + job.id; l.setAttribute('for', i.id); d.appendChild(l); d.appendChild(i); cr.appendChild(d); return i; }
+    var costIn = mini('cost-', 'Cost in \u00a3 (optional)'), partsIn = mini('parts-', 'Parts used (optional)');
+    costIn.inputMode = 'decimal'; c.wrap.insertBefore(cr, doneBtn);
+    function fail(x, msg) { x.err.textContent = msg; x.ta.setAttribute('aria-invalid', 'true'); x.ta.focus(); }
+    function allowed() { if (role === 'repair') return true; render(); return false; } // blocks updates without a sign in
+    function finish(msg) {
+      applyAssignee(); var persisted = save(); stats();
+      var fresh = buildCard(job); card.replaceWith(fresh);
+      var ok = fresh.querySelector('.ok'); ok.textContent = msg + (persisted ? '' : ' Warning: this browser could not save it.'); ok.focus();
+    }
+    if (startBtn) startBtn.addEventListener('click', function () {
+      if (!allowed()) return;
+      job.status = 'In Progress'; var n = p.ta.value.trim();
+      addEntry(job, 'status', 'Moved to In Progress.'); if (n) addEntry(job, 'note', n);
+      finish('Saved: ' + job.id + ' is now In Progress.' + (n ? ' Progress note added.' : ''));
+    });
+    saveBtn.addEventListener('click', function () {
+      if (!allowed()) return;
+      var n = p.ta.value.trim();
+      if (!n) return fail(p, 'Enter a progress note before saving. It cannot be blank or only spaces.');
+      if (job.status === 'New') { job.status = 'In Progress'; addEntry(job, 'status', 'Moved to In Progress.'); }
+      addEntry(job, 'note', n);
+      finish('Saved: progress note added to ' + job.id + '. Status: In Progress.');
+    });
+    doneBtn.addEventListener('click', function () {
+      if (!allowed()) return;
+      var n = c.ta.value.trim();
+      if (!n) return fail(c, 'Enter a completion note to complete this job. It cannot be blank or only spaces. The job is unchanged.');
+      var cv = costIn.value.trim().replace(/^\u00a3/, '');
+      if (cv && !/^\d+(\.\d{1,2})?$/.test(cv)) return fail(c, 'Enter the cost as a number, such as 45 or 45.50. The job is unchanged.');
+      job.status = 'Completed'; job.completionNote = n;
+      if (cv) job.cost = cv; if (partsIn.value.trim()) job.parts = partsIn.value.trim();
+      addEntry(job, 'completed', 'Completed. Completion note: ' + n);
+      finish('Saved: ' + job.id + ' is now Completed.');
+    });
+    return box;
+  }
+
+  /* ---------- Stats, filters, list ---------- */
+  function stats() {
+    var c = { 'New': 0, 'In Progress': 0, 'Completed': 0, 'Cancelled': 0, urgent: 0 };
+    jobs.forEach(function (j) { c[j.status]++; if (j.priority === 'Urgent' && !closed(j)) c.urgent++; });
+    var box = $('stats'); box.textContent = '';
+    [['Total jobs', jobs.length, '', ''], ['New', c['New'], 't-new', 'New'], ['In Progress', c['In Progress'], 't-prog', 'In Progress'], ['Completed', c['Completed'], 't-done', 'Completed'], ['Urgent and open', c.urgent, 't-urg', 'Urgent']]
+      .forEach(function (s) {
+        var b = el('button', 'stat ' + s[2]); b.type = 'button'; b.setAttribute('aria-pressed', String(f.st === s[3]));
+        b.appendChild(el('strong', null, String(s[1]))); b.appendChild(el('span', null, s[0]));
+        b.addEventListener('click', function () { f.st = (f.st === s[3]) ? '' : s[3]; $('sf').value = f.st; render(); });
+        box.appendChild(b);
+      });
+  }
+  function matches(j) {
+    if (f.st === 'Urgent' ? !(j.priority === 'Urgent' && !closed(j)) : (f.st && j.status !== f.st)) return false;
+    if (hideDone && closed(j) && f.st !== j.status) return false;
+    if (!f.q) return true;
+    var hay = [j.id, j.description, j.reporter, j.room, j.category, j.status].join(' ').toLowerCase();
+    return f.q.toLowerCase().split(/\s+/).every(function (t) { return hay.indexOf(t) > -1; });
+  }
+  function rank(j) { return closed(j) ? 2 : (j.priority === 'Urgent' ? 0 : 1); }
+  function render() {
+    stats();
+    var box = $('jobs'); box.textContent = '';
+    var shown = jobs.filter(matches);
+    var hiddenDone = hideDone ? jobs.filter(closed).length : 0;
+    $('hidden-note').textContent = (f.q || f.st ? shown.length + ' of ' + jobs.length + ' jobs match. ' : '') + (hiddenDone && !f.st ? hiddenDone + ' closed job' + (hiddenDone > 1 ? 's are' : ' is') + ' hidden.' : '');
+    if (!jobs.length) { box.appendChild(emptyBox(role === 'repair' ? 'No repair jobs yet. Jobs reported by staff will appear here.' : 'No repair jobs yet. Use the form to report the first one.')); return; }
+    if (!shown.length) { box.appendChild(emptyBox('No jobs match. Clear the search, choose "All jobs", or untick "Hide completed and cancelled jobs".')); return; }
+    var so = (role === 'repair' && f.so === 'new') ? 'urg' : f.so;
+    shown = shown.slice().sort(function (a, b) {
+      if (so === 'urg') return rank(a) - rank(b) || new Date(b.createdAt) - new Date(a.createdAt);
+      return so === 'old' ? new Date(a.createdAt) - new Date(b.createdAt) : new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    shown.forEach(function (j) { box.appendChild(buildCard(j)); });
+  }
+  $('hide').checked = hideDone;
+  $('hide').addEventListener('change', function () { hideDone = $('hide').checked; try { localStorage.setItem('meadowHideDone', hideDone ? '1' : '0'); } catch (e) {} render(); });
+  $('q').addEventListener('input', function () { f.q = $('q').value.trim(); render(); });
+  $('sf').addEventListener('change', function () { f.st = $('sf').value; render(); });
+  $('so').addEventListener('change', function () { f.so = $('so').value; render(); });
+
+  /* ---------- Photo ---------- */
+  var photoData = null, photoIn = $('photo'), photoErr = $('photo-err'), prev = $('photo-prev'), prevImg = $('photo-img');
+  function clearPhoto() { photoData = null; prev.hidden = true; prevImg.removeAttribute('src'); }
+  function readPhoto(file, cb) {
+    var r = new FileReader();
+    r.onerror = function () { cb(null); };
+    r.onload = function () {
+      var im = new Image();
+      im.onerror = function () { cb(null); };
+      im.onload = function () {
+        var s = Math.min(1, 800 / Math.max(im.width, im.height)), c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(im.width * s)); c.height = Math.max(1, Math.round(im.height * s));
+        c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+        cb(c.toDataURL('image/jpeg', 0.7));
+      };
+      im.src = r.result;
+    };
+    r.readAsDataURL(file);
+  }
+  photoIn.addEventListener('change', function () {
+    photoErr.textContent = '';
+    var file = photoIn.files[0];
+    if (!file) { clearPhoto(); return; }
+    if (!/^image\//.test(file.type)) { photoIn.value = ''; clearPhoto(); photoErr.textContent = 'Choose an image file, such as a JPG or PNG.'; return; }
+    readPhoto(file, function (d) {
+      if (!d) { photoIn.value = ''; clearPhoto(); photoErr.textContent = 'That image could not be read. Try a different photo.'; return; }
+      photoData = d; prevImg.src = d; prev.hidden = false;
+    });
+  });
+  $('photo-rm').addEventListener('click', function () { photoIn.value = ''; clearPhoto(); photoIn.focus(); });
+
+  /* ---------- Roles and sign in ---------- */
+  var dlg = $('login'), lu = $('lu'), lp = $('lp'), lerr = $('login-err');
+  function applyRole() {
+    var rp = role === 'repair';
+    $('role-staff').setAttribute('aria-pressed', String(!rp));
+    $('role-repair').setAttribute('aria-pressed', String(rp));
+    $('role-repair').textContent = rp ? 'Repair person' : 'Repair person sign in';
+    $('signout').hidden = !rp;
+    $('who').textContent = rp
+      ? 'Signed in as repair person. Urgent open jobs are listed first. You can add progress notes and complete jobs.'
+      : 'Using the site as staff. You can report repairs and follow their progress.';
+    $('report-panel').hidden = rp;
+    document.querySelector('main').className = rp ? 'single' : '';
+    $('jobs-h').textContent = rp ? 'Repair queue' : 'Repair jobs';
+  }
+  function setRole(r) { role = r; ss('meadowAuth', r === 'repair' ? '1' : null); applyRole(); idle(); render(); }
+  function openLogin() {
+    lu.value = ''; lp.value = ''; lerr.textContent = ''; lu.removeAttribute('aria-invalid'); lp.removeAttribute('aria-invalid');
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    lu.focus(); lockCheck();
+  }
+  function closeLogin() { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); }
+  function lockLeft() { return Math.max(0, (parseInt(ss('meadowLock') || '0', 10) || 0) - Date.now()); }
+  var lockTimer = null;
+  function lockCheck() {
+    var left = lockLeft(), go = $('login-go');
+    clearTimeout(lockTimer);
+    go.disabled = left > 0;
+    if (left > 0) { lerr.textContent = 'Too many failed attempts. Try again in ' + Math.ceil(left / 1000) + ' seconds.'; lockTimer = setTimeout(function () { if (!lockLeft()) lerr.textContent = ''; lockCheck(); }, 1000); }
+  }
+  $('role-staff').addEventListener('click', function () { if (role !== 'staff') setRole('staff'); });
+  $('role-repair').addEventListener('click', function () { if (role !== 'repair') openLogin(); });
+  $('signout').addEventListener('click', function () { setRole('staff'); $('role-staff').focus(); });
+  $('login-cancel').addEventListener('click', closeLogin);
+  $('showpw').addEventListener('click', function () {
+    var show = lp.type === 'password'; lp.type = show ? 'text' : 'password';
+    this.textContent = show ? 'Hide' : 'Show'; this.setAttribute('aria-pressed', String(show));
+  });
+  $('login-form').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    if (lockLeft() > 0) return lockCheck();
+    if (!lu.value.trim() || !lp.value) {
+      lerr.textContent = 'Enter both your username and password.';
+      lu.setAttribute('aria-invalid', String(!lu.value.trim())); lp.setAttribute('aria-invalid', String(!lp.value));
+      (lu.value.trim() ? lp : lu).focus(); return;
+    }
+    if (fingerprint(lu.value, lp.value) === AUTH.hash) {
+      ss('meadowFails', null); closeLogin(); setRole('repair'); $('signout').focus();
+    } else {
+      var n = (parseInt(ss('meadowFails') || '0', 10) || 0) + 1; ss('meadowFails', String(n));
+      lp.value = ''; lu.setAttribute('aria-invalid', 'true'); lp.setAttribute('aria-invalid', 'true');
+      if (n >= 5) { ss('meadowLock', String(Date.now() + 30000)); ss('meadowFails', null); lockCheck(); }
+      else lerr.textContent = 'Username or password is not correct. ' + (5 - n) + ' attempt' + (5 - n > 1 ? 's' : '') + ' left before a 30 second wait.';
+      lp.focus();
+    }
+  });
+
+  /* ---------- Sign out after 15 minutes without activity ---------- */
+  var idleT = null;
+  function idle() {
+    clearTimeout(idleT);
+    if (role === 'repair') idleT = setTimeout(function () { setRole('staff'); $('who').textContent = 'You were signed out after 15 minutes of inactivity. Sign in again to update jobs.'; }, 15 * 60000);
+  }
+  ['click', 'keydown', 'input'].forEach(function (e) { document.addEventListener(e, idle, true); });
+
+  /* ---------- Export, back up and restore ---------- */
+  var bk = $('bk-msg');
+  function saveAs(name, type, text) {
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: type })); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+  function cell(v) { v = String(v == null ? '' : v); if (/^[=+\-@]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; }
+  $('exp-csv').addEventListener('click', function () {
+    var rows = [['Job', 'Status', 'Priority', 'Type', 'Room', 'Description', 'Reported by', 'Assigned to', 'Reported', 'Last updated', 'Cost', 'Parts used', 'Completion note']];
+    jobs.forEach(function (j) { rows.push([j.id, j.status, j.priority, j.category, j.room, j.description, j.reporter, j.assignee, j.createdAt, j.history[j.history.length - 1].at, j.cost, j.parts, j.completionNote]); });
+    saveAs('meadow-house-jobs.csv', 'text/csv', '\ufeff' + rows.map(function (r) { return r.map(cell).join(','); }).join('\r\n'));
+    bk.textContent = 'Exported ' + jobs.length + ' job' + (jobs.length === 1 ? '' : 's') + ' to CSV.';
+  });
+  $('exp-json').addEventListener('click', function () {
+    saveAs('meadow-house-backup.json', 'application/json', JSON.stringify(jobs));
+    bk.textContent = 'Backup saved with ' + jobs.length + ' job' + (jobs.length === 1 ? '' : 's') + ', including photos.';
+  });
+  $('imp').addEventListener('click', function () { $('imp-file').click(); });
+  function valid(j) {
+    return j && typeof j.id === 'string' && typeof j.description === 'string' && typeof j.reporter === 'string' && typeof j.createdAt === 'string' && !isNaN(new Date(j.createdAt)) &&
+      ['New', 'In Progress', 'Completed', 'Cancelled'].indexOf(j.status) > -1 && Array.isArray(j.history) && j.history.length &&
+      j.history.every(function (h) { return h && typeof h.at === 'string' && typeof h.text === 'string' && !isNaN(new Date(h.at)); });
+  }
+  $('imp-file').addEventListener('change', function () {
+    var file = this.files[0], input = this; if (!file) return;
+    var r = new FileReader();
+    r.onload = function () {
+      var data; try { data = JSON.parse(r.result); } catch (e) { data = null; }
+      if (!Array.isArray(data) || !data.length || !data.every(valid)) { bk.textContent = 'That file is not a Meadow House backup. Nothing was changed.'; input.value = ''; return; }
+      var have = {}; jobs.forEach(function (j) { have[j.id] = 1; });
+      var add = data.filter(function (j) { return !have[j.id]; });
+      add.forEach(function (j) { j.priority = j.priority === 'Urgent' ? 'Urgent' : 'Normal'; });
+      jobs = add.concat(jobs); var ok = save(); render(); input.value = '';
+      bk.textContent = 'Restored ' + add.length + ' job' + (add.length === 1 ? '' : 's') + '; ' + (data.length - add.length) + ' already here and skipped.' + (ok ? '' : ' Warning: this browser could not save them.');
+    };
+    r.readAsText(file);
+  });
+
+  applyRole(); idle();
+  render();
+})();
+</script>
+</body>
+</html>
