@@ -133,6 +133,40 @@ footer p{margin:0}
 @media (max-width:800px){h1{font-size:2.1rem}.logo{width:76px;height:76px}}
 @media (max-width:380px){.cats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media print{footer,.hills{display:none}}
+
+/* ---- simple and calm ---- */
+html{font-size:118%}
+body{line-height:1.65}
+#stats,#role-staff,.count{display:none}
+.who:empty{display:none}
+.role{font-size:.85rem;padding:8px 14px;min-height:0}
+header{padding:26px 16px 40px}
+header p{font-size:1.1rem}
+h1{font-size:2.3rem}h2{font-size:1.6rem}
+main,main.single{grid-template-columns:minmax(0,1fr);max-width:760px;gap:28px;padding:20px 16px}
+.panel{padding:22px}
+button{padding:14px 22px;font-size:1.05rem;min-height:52px}
+.role{min-height:0}
+.tools2 button{padding:12px 18px;font-size:1rem}
+.big{display:block;width:100%;font-size:1.3rem;margin:22px 0 0;padding:18px}
+input[type=text],input[type=password],input[type=search],textarea,select{font-size:1.1rem;padding:14px}
+textarea{min-height:120px}
+label,legend{font-size:1.1rem;margin-top:18px}
+.job{padding:20px;margin-bottom:22px}
+.id{font-size:1rem;color:var(--muted)}
+.badge{font-size:1.05rem;padding:4px 14px}
+.desc{font-size:1.35rem}
+.latest{font-size:1.05rem}
+details.more{margin:16px 0;border:2px solid var(--line);border-radius:12px;background:var(--card)}
+details.more>summary{display:flex;align-items:center;min-height:56px;padding:12px 16px;cursor:pointer;font-weight:700;color:var(--brand);list-style:none}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"+";width:30px;font-size:1.5rem;font-weight:800}
+details.more[open]>summary::before{content:"\2212"}
+details.more>*:not(summary){margin-left:16px;margin-right:16px}
+details.more[open]{padding-bottom:16px}
+.cats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tile{font-size:1rem;padding:14px 8px}
+@media (min-width:520px){.cats{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -141,7 +175,7 @@ footer p{margin:0}
   <div class="brand">
     <svg class="logo" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd24d"/><stop offset="1" stop-color="#f5a300"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#lg)"/><path d="M32 12 10 31h7v20h30V31h7z" fill="#14204a"/><path d="M24 43l13-13" stroke="#ffc83d" stroke-width="4.5" stroke-linecap="round"/><circle cx="40" cy="27" r="6" fill="#ffc83d"/><circle cx="43" cy="24" r="2.6" fill="#14204a"/><path d="M44 11c7-.5 10.500 3 10.500 9.500-7 .5-10.500-3-10.500-9.500z" fill="#12d18e"/><path d="M46 18.500c2-2.500 4.500-4 6.500-5" stroke="#14204a" stroke-width="1.400" stroke-linecap="round" fill="none"/></svg>
     <h1>Meadow House <span>Repairs</span></h1>
-    <p>Report a repair, follow its progress and see what was done.</p>
+    <p>Tell us what needs fixing. We will keep you updated.</p>
   </div>
   <div class="roles" role="group" aria-label="Choose how to use this site">
     <button type="button" id="role-staff" class="role" aria-pressed="true">Staff</button>
@@ -173,55 +207,62 @@ footer p{margin:0}
 
 <main>
   <section class="panel" id="report-panel" aria-labelledby="form-h">
-    <h2 id="form-h">Report a repair</h2>
+    <h2 id="form-h">What needs fixing?</h2>
     <p id="created" class="ok" role="status" tabindex="-1"></p>
     <form id="report" novalidate>
-      <label for="desc">Description of the repair</label>
-      <textarea id="desc" maxlength="600" aria-describedby="desc-err"></textarea>
+      <label for="desc">Describe the problem</label>
+      <textarea id="desc" maxlength="600" aria-describedby="desc-err" placeholder="For example: the kitchen tap is dripping"></textarea>
       <p id="desc-count" class="count" aria-hidden="true">0 / 600</p>
       <p id="desc-err" class="err" role="alert"></p>
-      <fieldset><legend>Type of repair</legend><div id="cats" class="cats"></div></fieldset>
-      <label for="room">Room (optional)</label><input id="room" type="text" autocomplete="off" maxlength="40"></div>
-      <label for="rep">Reporter name</label>
+      <label for="rep">Your name</label>
       <input id="rep" type="text" autocomplete="off" aria-describedby="rep-err">
       <p id="rep-err" class="err" role="alert"></p>
-      <label for="photo">Photo of the problem (optional)</label>
-      <input id="photo" type="file" accept="image/*" aria-describedby="photo-hint photo-err">
-      <p id="photo-hint" class="hint">JPG or PNG. The photo is shrunk and saved in this browser only.</p>
-      <p id="photo-err" class="err" role="alert"></p>
-      <div id="photo-prev" class="prev" hidden>
-        <img id="photo-img" alt="Preview of the attached photo">
-        <button type="button" class="alt" id="photo-rm">Remove photo</button>
-      </div>
-      <fieldset>
-        <legend>Priority</legend>
-        <label class="radio"><input type="radio" name="prio" value="Normal" checked> Normal</label>
-        <label class="radio"><input type="radio" name="prio" value="Urgent"> Urgent</label>
-      </fieldset>
-      <button type="submit">Report repair</button>
+      <details class="more">
+        <summary>Add more details (optional)</summary>
+        <fieldset><legend>Type of repair</legend><div id="cats" class="cats"></div></fieldset>
+        <label for="room">Which room?</label><input id="room" type="text" autocomplete="off" maxlength="40">
+        <label for="photo">Add a photo</label>
+        <input id="photo" type="file" accept="image/*" aria-describedby="photo-hint photo-err">
+        <p id="photo-hint" class="hint">The photo is saved in this browser only.</p>
+        <p id="photo-err" class="err" role="alert"></p>
+        <div id="photo-prev" class="prev" hidden>
+          <img id="photo-img" alt="Preview of the attached photo">
+          <button type="button" class="alt" id="photo-rm">Remove photo</button>
+        </div>
+        <fieldset>
+          <legend>How urgent is it?</legend>
+          <label class="radio"><input type="radio" name="prio" value="Normal" checked> Normal</label>
+          <label class="radio"><input type="radio" name="prio" value="Urgent"> Urgent</label>
+        </fieldset>
+      </details>
+      <button type="submit" class="big">Send repair report</button>
     </form>
   </section>
   <section aria-labelledby="jobs-h">
-    <div class="bar">
-      <h2 id="jobs-h">Repair jobs</h2>
+    <h2 id="jobs-h">Repair jobs</h2>
+    <details class="more">
+      <summary>Search and filter jobs</summary>
       <label class="radio tog"><input type="checkbox" id="hide"> Hide completed and cancelled jobs</label>
-    </div>
-    <div class="tools" role="search">
-      <div><label for="q">Search jobs</label><input id="q" type="search" placeholder="Word, name, room or job number"></div>
-      <div><label for="sf">Show</label>
-        <select id="sf"><option value="">All jobs</option><option>New</option><option>In Progress</option><option>Completed</option><option>Cancelled</option><option value="Urgent">Urgent and open</option></select></div>
-      <div><label for="so">Sort by</label>
-        <select id="so"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="urg">Urgent first</option></select></div>
-    </div>
+      <div class="tools" role="search">
+        <div><label for="q">Search jobs</label><input id="q" type="search" placeholder="Word, name, room or job number"></div>
+        <div><label for="sf">Show</label>
+          <select id="sf"><option value="">All jobs</option><option>New</option><option>In Progress</option><option>Completed</option><option>Cancelled</option><option value="Urgent">Urgent and open</option></select></div>
+        <div><label for="so">Sort by</label>
+          <select id="so"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="urg">Urgent first</option></select></div>
+      </div>
+    </details>
     <p id="hidden-note" class="hint" role="status"></p>
-    <div class="tools2">
-      <button type="button" class="alt" id="exp-csv">Export CSV</button>
-      <button type="button" class="alt" id="exp-json">Back up (JSON)</button>
-      <button type="button" class="alt" id="imp">Restore backup</button>
-      <input type="file" id="imp-file" accept="application/json,.json" hidden aria-label="Choose a backup file">
-    </div>
-    <p id="bk-msg" class="hint" role="status"></p>
     <div id="jobs"></div>
+    <details class="more">
+      <summary>Backup and restore</summary>
+      <div class="tools2">
+        <button type="button" class="alt" id="exp-csv">Export CSV</button>
+        <button type="button" class="alt" id="exp-json">Back up (JSON)</button>
+        <button type="button" class="alt" id="imp">Restore backup</button>
+        <input type="file" id="imp-file" accept="application/json,.json" hidden aria-label="Choose a backup file">
+      </div>
+      <p id="bk-msg" class="hint" role="status"></p>
+    </details>
   </section>
 </main>
 
@@ -234,7 +275,7 @@ footer p{margin:0}
 (function () {
   var KEY = 'meadowHouseJobs', HOUSE = 'Meadow House';
   /* Sign-in check. Only a salted, repeatedly hashed fingerprint is stored, not the password itself. */
-  var AUTH = { salt: 'mh7Kq2xV9', hash: '92111600db260451b11cdb8ff8e8348bd5ea3cd44b743119188b68e84173d04e', rounds: 5000 };
+  var AUTH = { salt: 'mh7Kq2xV9', hash: '4e30a271da4b1711d3d66e0bb23ab1eab3b3b2612b87059d4a6d81556a938791', rounds: 5000 };
   var jobs = load();
 
   function load() { try { var j = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(j) ? j : []; } catch (e) { return []; } }
@@ -323,7 +364,7 @@ footer p{margin:0}
     jobs.unshift(job);
     var saved = save();
     form.reset(); clearPhoto(); $('desc-count').textContent = '0 / 600';
-    created.textContent = 'Job ' + job.id + ' created as New with ' + prio + ' priority.' + (saved ? '' : ' Warning: this browser could not save it.');
+    created.textContent = 'Thank you. Your repair has been reported as job ' + job.id + '.' + (saved ? '' : ' Warning: this browser could not save it.');
     render(); created.focus();
   });
 
@@ -339,8 +380,8 @@ footer p{margin:0}
     card.id = 'job-' + job.id; card.setAttribute('aria-label', 'Repair job ' + job.id);
     var top = el('div', 'top'); top.appendChild(iconEl(job.category));
     top.appendChild(el('span', 'id', job.id));
-    top.appendChild(el('span', 'badge s-' + slug(job.status), 'Status: ' + job.status));
-    top.appendChild(el('span', 'badge p-' + job.priority, job.priority === 'Urgent' ? 'Urgent priority' : 'Normal priority'));
+    top.appendChild(el('span', 'badge s-' + slug(job.status), ({'New':'Waiting','In Progress':'Being fixed','Completed':'Fixed','Cancelled':'Cancelled'})[job.status]));
+    if (job.priority === 'Urgent') top.appendChild(el('span', 'badge p-Urgent', 'Urgent'));
     if (isLate(job)) top.appendChild(el('span', 'badge late', 'Overdue'));
     card.appendChild(top);
     var ok = el('p', 'ok'); ok.setAttribute('role', 'status'); ok.tabIndex = -1; card.appendChild(ok);
@@ -359,21 +400,21 @@ footer p{margin:0}
       [done ? 'Time to complete' : 'Open for', dur(new Date(done ? last : Date.now()) - new Date(job.createdAt))]);
     var dl = el('dl', 'facts');
     rows.forEach(function (r) { var d = el('div'); d.appendChild(el('dt', null, r[0])); d.appendChild(el('dd', null, r[1])); dl.appendChild(d); });
-    card.appendChild(dl);
+    var more = el('details', 'more'); more.appendChild(el('summary', null, 'Show full details')); more.appendChild(dl);
     var ln = latestNote(job);
     if (ln) { var l = el('div', 'latest'); l.appendChild(el('strong', null, 'Latest progress note: ')); l.appendChild(document.createTextNode(ln)); card.appendChild(l); }
     if (job.status === 'Completed') { var c = el('div', 'latest'); c.appendChild(el('strong', null, 'Completion note: ')); c.appendChild(document.createTextNode(job.completionNote || '')); card.appendChild(c); }
-    card.appendChild(el('h3', null, 'History'));
+    more.appendChild(el('h3', null, 'History'));
     var ol = el('ol', 'hist');
     job.history.forEach(function (h) { var li = el('li'); li.appendChild(el('time', null, fmt(h.at))); li.appendChild(el('span', 't', h.text)); ol.appendChild(li); });
-    card.appendChild(ol);
+    more.appendChild(ol); card.appendChild(more);
     if (!done) {
       if (role === 'repair') card.appendChild(buildUpdate(job, card));
       else {
-        var lock = el('div', 'lock', 'Only the repair team can update this job. ');
+        var lock = el('div', 'lock', '');
         var sw = el('button', 'alt', 'Repair person sign in'); sw.type = 'button';
         sw.addEventListener('click', openLogin);
-        lock.appendChild(sw);
+        
         if (job.status === 'New') {
           var cb = el('button', 'alt', 'Cancel this job'); cb.type = 'button';
           cb.addEventListener('click', function () {
@@ -382,7 +423,7 @@ footer p{margin:0}
           });
           lock.appendChild(cb);
         }
-        card.appendChild(lock);
+        if (lock.childNodes.length) card.appendChild(lock);
       }
     }
     return card;
@@ -536,11 +577,11 @@ footer p{margin:0}
     $('role-repair').textContent = rp ? 'Repair person' : 'Repair person sign in';
     $('signout').hidden = !rp;
     $('who').textContent = rp
-      ? 'Signed in as repair person. Urgent open jobs are listed first. You can add progress notes and complete jobs.'
-      : 'Using the site as staff. You can report repairs and follow their progress.';
+      ? 'You are signed in as the repair person. Urgent jobs are listed first.'
+      : '';
     $('report-panel').hidden = rp;
     document.querySelector('main').className = rp ? 'single' : '';
-    $('jobs-h').textContent = rp ? 'Repair queue' : 'Repair jobs';
+    $('jobs-h').textContent = rp ? 'Repair jobs to do' : 'Your repair jobs';
   }
   function setRole(r) { role = r; ss('meadowAuth', r === 'repair' ? '1' : null); applyRole(); idle(); render(); }
   function openLogin() {
